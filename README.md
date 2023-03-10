@@ -1,3 +1,3 @@
 # STACK 
-###First in last out
-###Simpliest data structure
+### First in last out
+### Simpliest data structure
