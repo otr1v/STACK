@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <limits.h>
 //! typedef element of stack data
 typedef int elem_t;
 
@@ -107,7 +108,7 @@ const elem_t POISON = -2281337;                     // TODO remove global const 
 const int ZERO_ELEM_POP = -1;                   // TODO remove global const or add static
 static const int* NO_MEMORY = (int*)0x666; // TODO remove global const or add static
 const int k_realloc = 2;                    // TODO remove global const or add stati
-const int size_destroyed_stk = -1; // TODO remove global const or add static
+const int size_destroyed_stk = INT_MAX; // TODO remove global const or add static
 const int capacity_destroyed_stk = -228; // TODO remove global const or add static
 
 #endif

@@ -20,19 +20,16 @@ int main()
     elem_t k = 5; // TODO rename
     elem_t d = 7;
     elem_t l = 8;
-    // stk.name = STACK_NAME(stk);
     elem_t* test = NULL;
     elem_t value = 3;
     stackCreator_(&stk, 1);
     stackPush(&stk, &k);
     
-    int popped = stackPop(&stk, err);
-    printf("%d", popped);
-    // TODO segfault here
+    
     stackPush(&stk, &l);
     stackPush(&stk, &d);
-    // stackPush(&stk, &d);
-    // stackPush(&stk, &d);
+    stackPush(&stk, &d);
+    stackPush(&stk, &d);
     int sum_of_errors = stackError(&stk);
     stackDump(&stk, NULL, (stk.name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
     return 0;

@@ -16,7 +16,6 @@ stack_type* stackCreator_(stack_type* stack, int number_of_elems)
         }
       
         *(CANARY_TYPE *)(stack->data)                         = LEFT_DATA_CANARY;
-        printf("st%d", stack->data);
         stack->data = stack->data + sizeof(CANARY_TYPE) / sizeof(elem_t);
         *(CANARY_TYPE *)(stack->data + number_of_elems)       = RIGHT_DATA_CANARY;
         stack->capacity = number_of_elems;
@@ -37,7 +36,7 @@ stack_type* stackCreator_(stack_type* stack, int number_of_elems)
         #endif
     }
     stack->error = stackError(stack);
-    if (stack->error != 0)
+    if (stack->error != STACK_OK)
     {
         stackDump(stack, NULL, (stack->name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
     }
@@ -55,10 +54,9 @@ int stackPush(stack_type* stack, elem_t* value)
         stackResize(stack);
     }
     stack->data[stack->size] = *(value);
-    // printf("stack push %p value %d\n", &stack->data[stack->size], stack->data[stack->size]);
     stack->size++;
     stack->error = stackError(stack);
-    if (stack->error != 0)
+    if (stack->error != STACK_OK)
     {
         stackDump(stack, NULL, (stack->name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
     }
@@ -70,27 +68,23 @@ int stackPush(stack_type* stack, elem_t* value)
 const int* stackResize(stack_type* stack)
 {
     stack->capacity *= k_realloc;                        
-    printf("stack pointer1  %d \n",stack->data);       // changes
     stack->data = stack->data - (sizeof(CANARY_TYPE) / sizeof(elem_t));
-    printf("stack pointer2  %d \n",stack->data); 
-    stack->data = (elem_t*)realloc((stack->data) , ((stack->capacity) * sizeof(elem_t) + 2 * sizeof(CANARY_TYPE) + 0));
-    printf("can %d int %d\n", sizeof(CANARY_TYPE), sizeof(elem_t));
+    stack->data = (elem_t*) realloc((stack->data), ((stack->capacity) * sizeof(elem_t) + 2 * sizeof(CANARY_TYPE) + 0));
     if (stack->data == NULL)
     {
         printf("can't give memory to resize stack data array\n");
         return NO_MEMORY;
     }
-
     stack->data = stack->data + sizeof(CANARY_TYPE) / sizeof(elem_t);
     *(CANARY_TYPE *)(stack->data + stack->capacity) = RIGHT_DATA_CANARY;
 
-    // for (int i = (stack->size); i < (stack->capacity); i++)
-    // {
-    //     stack->data[i] = POISON;
-    // }
-    memset(stack->data, POISON, stack->capacity);
+    for (int i = (stack->size); i < (stack->capacity); i++)
+    {
+        memcpy(stack->data + i, &POISON, sizeof(elem_t));
+    }
+
     stack->error = stackError(stack);
-    if (stack->error != 0) // TODO compare with STACK_OK
+    if (stack->error != STACK_OK) 
     {
         stackDump(stack, NULL, (stack->name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
     }
@@ -101,14 +95,12 @@ const int* stackResize(stack_type* stack)
 
 int stackPop(stack_type* stack, int *err) // 
 {
-    //printf("lol");
     if ((stack->size) < 1)
     {
         printf("pop when size is 0, try another time\n");
-        *err = ZERO_ELEM_POP; // TODO remove, use stack->error;
+        *err = ZERO_ELEM_POP; 
     }
     int tmp = stack->data[stack->size - 1];
-    // printf("pop value %d\n", *pop_value);
     stack->data[stack->size - 1] = POISON;
     stack->size--;
     stack->error = stackError(stack);
@@ -116,7 +108,6 @@ int stackPop(stack_type* stack, int *err) //
     {
         stackDump(stack, err, (stack->name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
     }
-    // return stack->error;
     return tmp;
 }
 
@@ -161,7 +152,7 @@ int stackError(stack_type* stack)
     {
         sum_of_errors |= BAD_POINTER;
     }
-    if ((stack->size) == -1) // TODO stack->size is unsigned!!!
+    if ((stack->size) == size_destroyed_stk) 
     {
         sum_of_errors |= STACK_DELETED;
     }
@@ -203,7 +194,7 @@ int stackDump(stack_type* stack, int* err, const char* name, const int line, con
     {
         fprintf(fp, "size when pop 0: %d \n", ZERO_ELEM_POP);
     }
-    if (stack->error == 0)
+    if (stack->error == STACK_OK)
     {
         fprintf(fp, "all is ok\n");
     }
