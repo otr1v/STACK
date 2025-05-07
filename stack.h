@@ -100,15 +100,15 @@ int stackError(stack_type* stack);
 int stackDump(stack_type* stack, int* err,  const char* name, const int line, const char* function, const char* file);
 int Hash(const char* str, int len, stack_type* stack);
 
-const CANARY_TYPE LEFT_CANARY       = 0xBEADFACE; // TODO remove global const or add static
-const CANARY_TYPE RIGHT_CANARY      = 0xBAADF00D; // TODO remove global const or add static
-const CANARY_TYPE LEFT_DATA_CANARY  = 0xCAFEBABE; // TODO remove global const or add static
-const CANARY_TYPE RIGHT_DATA_CANARY = 0xDEADBABE; // TODO remove global const or add static
-const elem_t POISON = -2281337;                     // TODO remove global const or add static
-const int ZERO_ELEM_POP = -1;                   // TODO remove global const or add static
+static const CANARY_TYPE LEFT_CANARY       = 0xBEADFACE; // TODO remove global const or add static
+static const CANARY_TYPE RIGHT_CANARY      = 0xBAADF00D; // TODO remove global const or add static
+static const CANARY_TYPE LEFT_DATA_CANARY  = 0xCAFEBABE; // TODO remove global const or add static
+static const CANARY_TYPE RIGHT_DATA_CANARY = 0xDEADBABE; // TODO remove global const or add static
+static const elem_t POISON = -2281337;                     // TODO remove global const or add static
+static const int ZERO_ELEM_POP = -1;                   // TODO remove global const or add static
 static const int* NO_MEMORY = (int*)0x666; // TODO remove global const or add static
-const int k_realloc = 2;                    // TODO remove global const or add stati
-const int size_destroyed_stk = INT_MAX; // TODO remove global const or add static
-const int capacity_destroyed_stk = -228; // TODO remove global const or add static
+static const int k_realloc = 2;                    // TODO remove global const or add stati
+static const int size_destroyed_stk = INT_MAX; // TODO remove global const or add static
+static const int capacity_destroyed_stk = -228; // TODO remove global const or add static
 
 #endif

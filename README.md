@@ -20,6 +20,7 @@ typedef struct stack_type
 This canaries can't change their value, so if you are doing some operations with stack, the canaries are being checked every time
 
 There is a dump file in the project, that is being dumped every execution. Example of dump is in log.txt 
+
 ### The project was done in the october of 2022
 
 ### Refactored in may 2025
