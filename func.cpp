@@ -73,7 +73,7 @@ const int* stackResize(stack_type* stack)
     if (stack->data == NULL)
     {
         printf("can't give memory to resize stack data array\n");
-        return NO_MEMORY;
+        return NO_MEMORY_FOR_RESIZE;
     }
     stack->data = stack->data + sizeof(CANARY_TYPE) / sizeof(elem_t);
     *(CANARY_TYPE *)(stack->data + stack->capacity) = RIGHT_DATA_CANARY;
