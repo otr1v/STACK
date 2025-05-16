@@ -38,7 +38,7 @@ stack_type* stackCreator_(stack_type* stack, int number_of_elems)
     stack->error = stackError(stack);
     if (stack->error != STACK_OK)
     {
-        stackDump(stack, NULL, (stack->name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
+        stackDump(stack, (stack->name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
     }
     return stack;
 }
@@ -58,7 +58,7 @@ int stackPush(stack_type* stack, elem_t* value)
     stack->error = stackError(stack);
     if (stack->error != STACK_OK)
     {
-        stackDump(stack, NULL, (stack->name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
+        stackDump(stack, (stack->name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
     }
     return stack->error;
 }
@@ -86,29 +86,30 @@ const int* stackResize(stack_type* stack)
     stack->error = stackError(stack);
     if (stack->error != STACK_OK) 
     {
-        stackDump(stack, NULL, (stack->name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
+        stackDump(stack, (stack->name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
     }
     return NULL;
 }
 
 //======================================================================
 
-int stackPop(stack_type* stack, int *err) // 
+int stackPop(stack_type* stack, elem_t *popped_elem) // 
 {
     if ((stack->size) < 1)
     {
-        printf("pop when size is 0, try another time\n");
-        *err = ZERO_ELEM_POP; 
+        stack->error |= STACK_DATA_NULL; 
+        stack->error |= ZERO_ELEM_POP;
+        return stack->error;
     }
-    int tmp = stack->data[stack->size - 1];
+    *popped_elem = stack->data[stack->size - 1];
     stack->data[stack->size - 1] = POISON;
     stack->size--;
     stack->error = stackError(stack);
     if (stack->error != 0)
     {
-        stackDump(stack, err, (stack->name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
+        stackDump(stack, (stack->name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
     }
-    return tmp;
+    return stack->error;
 }
 
 //=========================================================================
@@ -172,13 +173,14 @@ int stackError(stack_type* stack)
     {
         sum_of_errors |= DAMAGED_RIGHT_DATA_CANARY;
     }
+
     // TODO compare haches
     return sum_of_errors; 
 }
 
 //===========================================================================
 
-int stackDump(stack_type* stack, int* err, const char* name, const int line, const char* function, const char* file)
+int stackDump(stack_type* stack, const char* name, const int line, const char* function, const char* file)
 {
     FILE* fp = fopen("log.txt", "w");
     fprintf(fp, "capacity = %ld\n", stack->capacity);
@@ -190,10 +192,10 @@ int stackDump(stack_type* stack, int* err, const char* name, const int line, con
         fprintf(fp, "file : %s, ", file);
         fprintf(fp, "name : %s, \n", name);
     #endif
-    if (err != NULL)
-    {
-        fprintf(fp, "size when pop 0: %d \n", ZERO_ELEM_POP);
-    }
+    // if (err != NULL)
+    // {
+    //     fprintf(fp, "size when pop 0: %d \n", ZERO_ELEM_POP);
+    // }
     if (stack->error == STACK_OK)
     {
         fprintf(fp, "all is ok\n");
@@ -239,6 +241,10 @@ int stackDump(stack_type* stack, int* err, const char* name, const int line, con
         {
             fprintf(fp, "your stack has been hacked(right data canary has been damaged)\n");
         } 
+        if (((stack->error) & STACK_POP_ZERO) == STACK_POP_ZERO)
+        {
+            fprintf(fp, "you are trying to pop from empty stack\n");
+        }
     }
       for (int i = 0; i < (stack->capacity); i++)
         {

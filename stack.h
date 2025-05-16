@@ -30,7 +30,8 @@ enum errCodes {
     DAMAGED_RIGHT_CANARY      = 1 << 4,
     DAMAGED_LEFT_CANARY       = 1 << 5,
     DAMAGED_LEFT_DATA_CANARY  = 1 << 6,
-    DAMAGED_RIGHT_DATA_CANARY = 1 << 7
+    DAMAGED_RIGHT_DATA_CANARY = 1 << 7,
+    STACK_POP_ZERO           = 1 << 8
 };
 
 //! typedef struct stack
@@ -97,7 +98,7 @@ int stackError(stack_type* stack);
 /// @param function 
 /// @param file 
 /// @return 
-int stackDump(stack_type* stack, int* err,  const char* name, const int line, const char* function, const char* file);
+int stackDump(stack_type* stack,  const char* name, const int line, const char* function, const char* file);
 int Hash(const char* str, int len, stack_type* stack);
 
 static const CANARY_TYPE LEFT_CANARY       = 0xBEADFACE; // TODO remove global const or add static

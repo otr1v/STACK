@@ -31,7 +31,7 @@ int main()
     stackPush(&stk, &d);
     stackPush(&stk, &d);
     int sum_of_errors = stackError(&stk);
-    stackDump(&stk, NULL, (stk.name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
+    stackDump(&stk, (stk.name), __LINE__, __PRETTY_FUNCTION__, __FILE__);
     return 0;
 }
 
